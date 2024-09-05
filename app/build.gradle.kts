@@ -21,6 +21,13 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+//        buildConfigField(
+//            type = "String",
+//            name = "NEWS_API_KEY",
+//            value = "\"${System.getenv("NEWS_API_KEY")}\""
+//        )
+
     }
 
     buildTypes {
@@ -60,6 +67,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
@@ -72,10 +80,20 @@ dependencies {
     implementation(project(":utilities"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.converter.gson)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+    implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.coil.compose)
+
 }
 
 kapt {
     correctErrorTypes = true
 }
-//implementation("com.google.dagger:hilt-android:2.44")
-//    kapt("com.google.dagger:hilt-android-compiler:2.44")
