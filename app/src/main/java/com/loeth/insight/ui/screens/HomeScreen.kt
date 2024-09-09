@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.loeth.insight.data.entity.Article
 import com.loeth.insight.ui.components.EmptyStateComponent
 import com.loeth.insight.ui.components.Loader
 import com.loeth.insight.ui.components.NewsList
@@ -30,8 +29,6 @@ fun HomeScreen(
     newsViewModel: NewsViewModel = hiltViewModel()
 ){
 
-    var displayedArticles = mutableListOf<Article>()
-
     val newsRes by newsViewModel.news.collectAsState()
 
     val pagerState = rememberPagerState(
@@ -41,14 +38,13 @@ fun HomeScreen(
         100
     }
 
-
     VerticalPager(
         state = pagerState,
         modifier = Modifier.fillMaxSize(),
         pageSize = PageSize.Fill,
         pageSpacing = 8.dp
     )
-    {
+    { page:Int ->
 
 
             Log.d(TAG, "API Response: ${newsRes}")
@@ -66,20 +62,13 @@ fun HomeScreen(
 
                     Log.d(TAG, "Inside Success ${response.status} = ${response.totalResults}")
 
-                    val newArticles = response.articles.filterNot { article ->
-                        displayedArticles.contains(article)
-                    }
-
-                    if (newArticles.isNotEmpty()) {
-                        newArticles.forEach { article ->
-                            NewsRowComponent(displayedArticles.size, article)
-                            displayedArticles.add(article)  // Add to the list of displayed articles
-                        }
+                    if(response.articles.isNotEmpty())
+                    {
+                    NewsRowComponent(page, response.articles[page])
                     } else {
-                        // Show EmptyStateComponent only when there are no articles at all
                         EmptyStateComponent()
-                    }
 
+                    }
                 }
 
                 is ResourceState.Error -> {

@@ -84,7 +84,6 @@ fun NormalTextComponent(textValue: String){
         style = TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
-            color = Color.Black
 
         )
     )
@@ -92,10 +91,10 @@ fun NormalTextComponent(textValue: String){
 
 
 @Composable
-fun HeaderTextComponent(textValue: String, centerAligned: Boolean = false){
+fun HeadingTextComponent(textValue: String, centerAligned: Boolean = false){
     Text(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .wrapContentHeight()
             .padding(8.dp),
         text = textValue,
@@ -117,18 +116,18 @@ fun NewsRowComponent(page: Int, article: Article) {
     ){
         AsyncImage(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .height(240.dp),
             model = article.urlToImage,
             contentDescription = null,
-            contentScale = ContentScale.Fit,
-            placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
-            error = painterResource(id = R.drawable.lth)
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.no_img),
+            error = painterResource(id = R.drawable.error_img)
         )
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        HeaderTextComponent(textValue = article.title?: "")
+        HeadingTextComponent(textValue = article.title?: "")
 
         Spacer(modifier = Modifier.size(10.dp))
 
@@ -183,12 +182,12 @@ fun EmptyStateComponent(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        
+
         Image( painter = painterResource(id = R.drawable.no_data),
             contentDescription = null
         )
-        
-        HeaderTextComponent(textValue = "No News Available now, Please check back later! ",
+
+        HeadingTextComponent(textValue = "No News Available now, Please check back later! ",
             centerAligned = true )
 
     }

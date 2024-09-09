@@ -61,7 +61,6 @@ class AppModule {
     @Singleton
     fun providesNewsRepository(newsDataSource: NewsDataSource): NewsRepository{
         return NewsRepository(newsDataSource)
-
     }
 
 }
