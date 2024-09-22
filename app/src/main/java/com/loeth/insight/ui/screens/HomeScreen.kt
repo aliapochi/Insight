@@ -2,7 +2,12 @@ package com.loeth.insight.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -23,68 +28,50 @@ import com.loeth.utilities.ResourceState
 
 
 const val TAG = "Home Screen"
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     newsViewModel: NewsViewModel = hiltViewModel()
-){
-
+) {
     val newsRes by newsViewModel.news.collectAsState()
 
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        initialPageOffsetFraction = 0f
-    ){
-        100
-    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        when(newsRes) {
+            is ResourceState.Loading -> {
+                Log.d(TAG, "Inside Loading")
+                Loader()
+            }
 
-    VerticalPager(
-        state = pagerState,
-        modifier = Modifier.fillMaxSize(),
-        pageSize = PageSize.Fill,
-        pageSpacing = 8.dp
-    )
-    { page:Int ->
+            is ResourceState.Success -> {
+                val response = (newsRes as ResourceState.Success).data
 
+                Log.d(TAG, "Inside Success: ${response.status} = ${response.totalResults}")
 
-            Log.d(TAG, "API Response: ${newsRes}")
+                if (response.articles.isNotEmpty()) {
+                    LazyRow(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(response.articles) { article ->
 
-            when(newsRes){
-                is ResourceState.Loading -> {
-                    Log.d(TAG, "Inside Loading")
-                    Loader()
-
-                }
-
-                is ResourceState.Success -> {
-
-                    val response = (newsRes as ResourceState.Success).data
-
-                    Log.d(TAG, "Inside Success ${response.status} = ${response.totalResults}")
-
-                    if(response.articles.isNotEmpty())
-                    {
-                    NewsRowComponent(page, response.articles[page])
-                    } else {
-                        EmptyStateComponent()
-
+                            Log.d(TAG, "Inside Success: ${response.status} = ${response.totalResults}")
+                            NewsRowComponent(article = article)
+                        }
                     }
-                }
-
-                is ResourceState.Error -> {
-
-                    val error = (newsRes as ResourceState.Error)
-                    Log.d(TAG, "Inside Error $error")
-
+                } else {
+                    EmptyStateComponent()
                 }
             }
 
-
-
-
+            is ResourceState.Error -> {
+                val error = (newsRes as ResourceState.Error)
+                Log.d(TAG, "Inside Error: $error")
+                EmptyStateComponent() // You can display an empty state here
+            }
+        }
     }
-
 }
+
 
 
 

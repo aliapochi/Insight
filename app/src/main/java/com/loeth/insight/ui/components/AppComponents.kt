@@ -108,7 +108,7 @@ fun HeadingTextComponent(textValue: String, centerAligned: Boolean = false){
 }
 
 @Composable
-fun NewsRowComponent(page: Int, article: Article) {
+fun NewsRowComponent( article: Article) {
     Column( modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
@@ -153,7 +153,7 @@ fun NewsRowComponentPreview(){
         null,
         null,
     )
-    NewsRowComponent(0, article)
+   // NewsRowComponent(0, article)
 }
 
 @Composable

@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
-    val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository
 ): ViewModel() {
 
     private val _news : MutableStateFlow<ResourceState<NewsResponse>> = MutableStateFlow(ResourceState.Loading())
@@ -27,17 +27,14 @@ class NewsViewModel @Inject constructor(
     init{
         getNews(AppConstants.COUNTRY)
     }
-     private fun getNews(country: String){
+    private fun getNews(country: String){
         viewModelScope.launch(Dispatchers.IO){
             newsRepository.getNewsHeadline(country)
                 .collectLatest { newsResponse ->
-                   _news.value = newsResponse
+                    _news.value = newsResponse
                 }
 
         }
     }
 
-    companion object{
-        const val TAG = "NewsViewModel"
-    }
 }
